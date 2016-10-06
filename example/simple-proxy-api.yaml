@@ -1,7 +1,7 @@
 ---
 swagger: 2.0
 info:
-  title: RetailGraphQLApi
+  title: YOUR_API_GATEWAY_NAME
 basePath: /prod
 schemes:
 - https

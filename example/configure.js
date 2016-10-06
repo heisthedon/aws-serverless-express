@@ -8,6 +8,7 @@ const bucketName = args[1]
 const region = args[2] || 'us-east-1'
 const availableRegions = ['us-east-1', 'us-west-2', 'eu-west-1', 'eu-central-1', 'ap-northeast-1', 'ap-northeast-2', 'ap-southeast-1', 'ap-southeast-2']
 const lambdaFunctionName = 'RetailGraphQLLambda'
+const apiGatewayName = 'RetailGraphQLApi'
 
 if (!accountId || accountId.length !== 12) {
     console.error('You must supply a 12 digit account id as the first argument')
@@ -34,6 +35,7 @@ function modifySimpleProxyFile() {
         .replace(/YOUR_ACCOUNT_ID/g, accountId)
         .replace(/YOUR_AWS_REGION/g, region)
         .replace(/YOUR_LAMBDA_FUNCTION_NAME/g, lambdaFunctionName)
+        .replace(/YOUR_API_GATEWAY_NAME/g, apiGatewayName)
 
     fs.writeFileSync(simpleProxyApiPath, simpleProxyApiModified, 'utf8')
 }
