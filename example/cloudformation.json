@@ -12,6 +12,10 @@
             "Description": "The S3 object for the lambda function code package.",
             "Default": "lambda-function.zip"
         },
+        "LambdaFunctionName": {
+            "Type": "String",
+            "Description": "The name of lambda function.",
+        },
         "ApiGatewaySwaggerS3Key": {
             "Type": "String",
             "AllowedPattern": ".*\\.yaml",
@@ -109,7 +113,9 @@
                         "Ref": "LambdaFunctionS3Key"
                     }
                 },
-                "FunctionName": "AwsServerlessExpressFunction",
+                "FunctionName": {
+                    "Ref": "LambdaFunctionName"
+                },
                 "Handler": "lambda.handler",
                 "MemorySize": 128,
                 "Role": {
