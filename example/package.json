@@ -5,13 +5,14 @@
   "main": "lambda.js",
   "config": {
     "s3BucketName": "YOUR_UNIQUE_BUCKET_NAME",
-    "cloudFormationStackName": "AwsServerlessExpressStack",
-    "region": "YOUR_AWS_REGION"
+    "cloudFormationStackName": "RetailGraphQLStack",
+    "region": "YOUR_AWS_REGION",
+    "lambdaFunctionName": "YOUR_LAMBDA_FUNCTION_NAME"
   },
   "scripts": {
     "config": "node configure.js",
     "local": "node -e \"require('./lambda.js').handler(require('./api-gateway-event.json'), {succeed: v => console.log(v)}, (e, v) => console.log(v))\"",
-    "invoke-lambda": "aws lambda invoke --function-name AwsServerlessExpressFunction --region $npm_package_config_region --payload file://api-gateway-event.json lambda-invoke-response.json && cat lambda-invoke-response.json",
+    "invoke-lambda": "aws lambda invoke --function-name $npm_package_config_lambdaFunctionName --region $npm_package_config_region --payload file://api-gateway-event.json lambda-invoke-response.json && cat lambda-invoke-response.json",
     "create-bucket": "aws s3 mb s3://$npm_package_config_s3BucketName --region $npm_package_config_region",
     "delete-bucket": "aws s3 rm s3://$npm_package_config_s3BucketName/lambda-function.zip --region $npm_package_config_region; aws s3 rm s3://$npm_package_config_s3BucketName/simple-proxy-api.yaml --region $npm_package_config_region; aws s3 rb s3://$npm_package_config_s3BucketName --region $npm_package_config_region",
     "package-function": "zip -q -r lambda-function.zip lambda.js app.js index.html node_modules",
@@ -20,7 +21,7 @@
     "create-stack": "aws cloudformation create-stack --stack-name $npm_package_config_cloudFormationStackName --template-body file://./cloudformation.json --capabilities CAPABILITY_IAM --parameters ParameterKey=AwsServerlessExpressS3Bucket,ParameterValue=$npm_package_config_s3BucketName --region $npm_package_config_region && open https://console.aws.amazon.com/cloudformation/home?region=$npm_package_config_region",
     "update-stack": "aws cloudformation update-stack --stack-name $npm_package_config_cloudFormationStackName --template-body file://./cloudformation.json --capabilities CAPABILITY_IAM --parameters ParameterKey=AwsServerlessExpressS3Bucket,ParameterValue=$npm_package_config_s3BucketName --region $npm_package_config_region",
     "delete-stack": "aws cloudformation delete-stack --stack-name $npm_package_config_cloudFormationStackName --region $npm_package_config_region",
-    "update-function": "aws lambda update-function-code --function-name AwsServerlessExpressFunction --region $npm_package_config_region --zip-file fileb://lambda-function.zip",
+    "update-function": "aws lambda update-function-code --function-name $npm_package_config_lambdaFunctionName --region $npm_package_config_region --zip-file fileb://lambda-function.zip",
     "package-upload-function": "npm run package-function && npm run upload-lambda-function-package",
     "package-upload-update-function": "npm run package-upload-function && npm run update-function",
     "setup": "npm install && aws s3api get-bucket-location --bucket $npm_package_config_s3BucketName --region $npm_package_config_region || npm run create-bucket && npm run package-upload-function && npm run upload-api-gateway-swagger && npm run create-stack"
